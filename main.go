@@ -31,10 +31,10 @@ func tampil(res http.ResponseWriter, req *http.Request) {
 	db := connect()
 	defer db.Close()
 
-	rows, _ := db.Query("select * from mhs")
+	rows, _ := db.Query("select * from mhs order by nim asc")
 
 	var nim, nama, status string
-	var a int = 1
+	no := 1
 
 	type mahasiswa []maba
 	var data_mhs mahasiswa
@@ -43,12 +43,12 @@ func tampil(res http.ResponseWriter, req *http.Request) {
 
 		rows.Scan(&nim, &nama, &status)
 		data := maba{
-			Number: a,
+			Number: no,
 			Id:     nim,
 			Name:   nama,
 			Text:   status,
 		}
-		a++
+		no++
 		data_mhs = append(data_mhs, data)
 	}
 	t, _ := template.ParseFiles("tabel.html")
@@ -56,8 +56,40 @@ func tampil(res http.ResponseWriter, req *http.Request) {
 	t.Execute(res, data_mhs)
 }
 
+func isi_data(res http.ResponseWriter, req *http.Request) {
+	db := connect()
+	defer db.Close()
+
+	nim := req.FormValue("nim")
+	nama := req.FormValue("nama")
+	status := req.FormValue("status")
+
+	_, err := db.Exec("insert into mhs value (?,?,?)", nim, nama, status)
+	if err != nil {
+		http.Redirect(res, req, "/", 301)
+		fmt.Println("gagal input")
+	}
+	http.Redirect(res, req, "/", 301)
+}
+func hapus(res http.ResponseWriter, req *http.Request) {
+
+	db := connect()
+	defer db.Close()
+
+	hapus := req.FormValue("hapus")
+
+	_, err := db.Exec("delete from mhs where nim=?", hapus)
+	if err != nil {
+		http.Redirect(res, req, "/", 301)
+		fmt.Println("gagal input")
+	}
+	http.Redirect(res, req, "/", 301)
+}
 func main() {
 	http.HandleFunc("/", tampil)
+	http.HandleFunc("/isi_data", isi_data)
+	http.HandleFunc("/hapus", hapus)
+	http.Handle("/data/", http.StripPrefix("/data/", http.FileServer(http.Dir("data"))))
 	open.RunWith("http://localhost:8080/", "opera")
 	http.ListenAndServe(":8080", nil)
 }

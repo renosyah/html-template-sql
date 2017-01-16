@@ -1,34 +1,98 @@
 <html>
+<head>
+<title>Html template go</title>
+
+<style>
+
+body {
+
+background-image:url(data/body.jpg);
+background-attachment:fixed;
+zoom:reset;
+color:white;
+font-family:tahoma,verdana,arial;
+
+}
+html {
+
+zoom:reset;
+
+
+}
+#tabelku {
+
+
+text-align:center;
+margin-left:auto;
+margin-right:auto;
+
+}
+#tabelku tr td{
+
+
+background-image:url(data/body2.jpg);
+}
+
+
+body input {
+
+color:blue;
+
+
+
+}
+
+
+</style>
+</head>
 <body>
 
 <table border="0" width="100%">
 <tr>
-<td width="30%"></td><td height="50"></td><td width="30%"></td>
+<td width="30%"></td>
+
+<td height="200" style="text-align:center;">
+<h1>Mengimputkan data ke tabel</h1>
+<form method="post" action="/isi_data" >
+masukkan Nim : <br>
+<input type="number" name="nim" required><br><br>
+masukkan Nama : <br>
+<input type="text" name="nama" required><br><br>
+masukkan Status : <br>
+<input type="text" name="status" required><br><br>
+<br>
+<input type="submit" value="masukkan data">
+</form>
+</td><td width="30%"></td>
 
 </tr>
-<tr><td width="30%"></td><td>
+<tr><td width="30%"></td><td style='text-align:center'>
 
-<h1>menampilkan hasil dari database</h1>
-<table width='500' border='1' style='text-align:center'>
+<h1>Menampilkan hasil</h1>
+<table id="tabelku" width='700' border='1'>
 <tr>
-<td><h2>no</h2></td><td><h2>Nim</h2></td><td><h2>nama</h2></td><td><h2>status</h2></td>
+<td><h2>No.</h2></td><td><h2>Nim</h2></td><td><h2>Nama</h2></td><td><h2>Status</h2></td><td></td>
 </tr>
+<form method="post" action="/hapus">
+
 {{range .}}
 <tr>
-<td>{{.Number}}</td><td>{{.Id}}</td><td>{{.Name}}</td><td>{{.Text}}</td>
+<td height='40'>{{.Number}}</td><td>{{.Id}}</td><td>{{.Name}}</td><td>{{.Text}}</td><td><button value='{{.Id}}' name="hapus">hapus</button></td>
 </tr>
 {{end}}
 
+</form>
 </table>
-<p>tanpa loop html</p>
+<p>tanpa melakukan looping seluruh html</p>
 
 
 
 </td><td width="30%"></td>
 </tr>
 <tr>
-<td width="30%"></td><td height="200"></td><td width="30%"></td>
-
+<td></td>
+<td height="200"></td>
+<td></td>
 </tr>
 </table>
 </body>
